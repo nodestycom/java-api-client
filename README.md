@@ -433,7 +433,7 @@ someApiClientCall
 
 ## API Modelleri
 
-Bu kütüphanede, Nodesty API'den dönen tüm JSON yanıtlarını ve API'ye gönderilen istek gövdelerini temsil etmek için Java record sınıfları ve enum'lar kullanılır. Tüm bu model sınıfları `dev.astatic.nodestyclient.model` paketi altında yer alır.
+Bu kütüphanede, Nodesty API'den dönen tüm JSON yanıtlarını ve API'ye gönderilen istek gövdelerini temsil etmek için Java record sınıfları ve enum'lar kullanılır. Tüm bu model sınıfları `dev.astatic.nodestyclient.api.models` paketi altında yer alır.
 
 ### Genel Özellikler
 
