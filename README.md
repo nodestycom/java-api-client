@@ -44,29 +44,6 @@ https://jitpack.io/#staticius/NodestyAPI/1.0.1
 
 Aşağıdaki örnekler, ana uygulama sınıfınızda (Main.java gibi) temel kullanım senaryolarını adım adım göstermektedir.
 
-### Önerilen Paket Yapısı
-
-```
-src/main/java/
-└── dev/
-    └── astatic/
-        └── nodestyclient/
-            ├── api/              <-- Temel istemci sınıfları ve API modelleri
-            │   ├── NodestyApiClient.java
-            │   ├── ApiFetchFunction.java
-            │   ├── ApiResponse.java
-            │   └── RestClientOptions.java
-            ├── model/            <-- Tüm API'den dönen veri modelleri (User, VpsDetails vb.)
-            │   ├── User.java
-            │   ├── VpsDetails.java
-            │   └── ... (Diğer tüm veri modeli sınıfları)
-            └── service/          <-- Her bir API alanı için özel servis sınıfları
-                ├── UserApiService.java
-                ├── VpsApiService.java
-                ├── FirewallApiService.java
-                └── DedicatedApiService.java
-```
-
 ### API İstemcisini Başlatma
 
 `NodestyApiClient` sınıfını başlatırken, Nodesty PAT'nizi zorunlu olarak belirtmeniz gerekir. Ayrıca, isteğe bağlı olarak istek zaman aşımı, yeniden deneme sayısı gibi ek seçenekleri `RestClientOptions` objesi ile yapılandırabilirsiniz.
