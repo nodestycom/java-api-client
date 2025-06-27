@@ -36,7 +36,7 @@ Bu depo, Nodesty API ile kolayca etkileşim kurmanızı sağlayan hafif ve asenk
 
 Projenize bağımlılıkları eklemek için kullandığınız build aracına göre aşağıdaki adımları izleyin.
 
-https://jitpack.io/#staticius/NodestyAPI/v1.0.1
+https://jitpack.io/#staticius/NodestyAPI/1.0.1
 
 ## Kullanım
 
