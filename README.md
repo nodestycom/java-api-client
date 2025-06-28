@@ -27,17 +27,30 @@ nodesty.com'un güçlü API'sine Java uygulamalarınızdan kolayca erişmenizi s
 ## 🛠️ Kurulum
 
 ```xml
-<dependency>
-    <groupId>dev.astatic</groupId>
-    <artifactId>nodesty-client</artifactId>
-    <version>1.0.0</version>
-</dependency>
+    <repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
+    <dependency>
+	    <groupId>com.github.nodestycom</groupId>
+	    <artifactId>java-api-client</artifactId>
+	    <version>1.0.0</version>
+	</dependency>
 ```
 
 ```gradle.kts
+
+repositories {
+			mavenCentral()
+			maven { url = uri("https://jitpack.io") }
+		}
+
 dependencies {
-    implementation 'dev.astatic:nodesty-client:1.0.0'
-}
+implementation("com.github.nodestycom:java-api-client:1.0.0")
+	}
 ```
 
 ## 🔑 Başlangıç
