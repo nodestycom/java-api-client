@@ -19,11 +19,30 @@ public class RestClientOptions {
         this.rateLimitOffset = 50;
     }
 
-    public RestClientOptions withRetry(int retry) { this.retry = retry; return this; }
-    public RestClientOptions withTimeout(Duration timeout) { this.timeout = timeout; return this; }
-    public RestClientOptions withRateLimitOffset(int rateLimitOffset) { this.rateLimitOffset = rateLimitOffset; return this; }
+    public RestClientOptions withRetry(int retry) {
+        this.retry = retry;
+        return this;
+    }
 
-    public int getRetry() { return retry != null ? retry : 3; }
-    public Duration getTimeout() { return timeout != null ? timeout : Duration.ofSeconds(30); }
-    public int getRateLimitOffset() { return rateLimitOffset != null ? rateLimitOffset : 50; }
+    public RestClientOptions withTimeout(Duration timeout) {
+        this.timeout = timeout;
+        return this;
+    }
+
+    public RestClientOptions withRateLimitOffset(int rateLimitOffset) {
+        this.rateLimitOffset = rateLimitOffset;
+        return this;
+    }
+
+    public int getRetry() {
+        return retry != null ? retry : 3;
+    }
+
+    public Duration getTimeout() {
+        return timeout != null ? timeout : Duration.ofSeconds(30);
+    }
+
+    public int getRateLimitOffset() {
+        return rateLimitOffset != null ? rateLimitOffset : 50;
+    }
 }

@@ -4,4 +4,5 @@ public record DedicatedServerReinstallData(
         String password,
         int osId,
         boolean sendEmail
-) {}
+) {
+}

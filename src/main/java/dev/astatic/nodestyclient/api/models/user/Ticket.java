@@ -11,4 +11,5 @@ public record Ticket(
         long createdAt,
         long updatedAt,
         List<TicketMessage> messages
-) {}
+) {
+}

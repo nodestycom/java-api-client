@@ -4,4 +4,5 @@ public record DedicatedServerTrafficDetails(
         long total,
         long used,
         long free
-) {}
+) {
+}

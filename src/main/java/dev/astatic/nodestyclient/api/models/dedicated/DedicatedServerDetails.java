@@ -14,4 +14,5 @@ public record DedicatedServerDetails(
         List<DedicatedServerStorageDetails> storage,
         DedicatedServerNetworkSpeed netspeed,
         DedicatedServerTrafficDetails traffic
-) {}
+) {
+}

@@ -4,4 +4,5 @@ public record VpsBandwidthDetails(
         long total,
         long used,
         long free
-) {}
+) {
+}

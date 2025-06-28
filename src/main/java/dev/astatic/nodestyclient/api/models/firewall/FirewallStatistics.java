@@ -4,4 +4,5 @@ public record FirewallStatistics(
         long timestamp,
         String totalTraffic,
         String attackTraffic
-) {}
+) {
+}

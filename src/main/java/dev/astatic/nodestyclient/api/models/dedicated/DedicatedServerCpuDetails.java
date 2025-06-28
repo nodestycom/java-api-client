@@ -6,4 +6,5 @@ public record DedicatedServerCpuDetails(
         int turboSpeed,
         int cores,
         int threads
-) {}
+) {
+}

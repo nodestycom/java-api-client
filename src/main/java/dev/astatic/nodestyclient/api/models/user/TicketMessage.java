@@ -5,4 +5,5 @@ public record TicketMessage(
         String sender,
         String message,
         long createdAt
-) {}
+) {
+}

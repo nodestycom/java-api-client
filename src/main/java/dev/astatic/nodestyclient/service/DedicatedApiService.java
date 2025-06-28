@@ -17,16 +17,19 @@ public class DedicatedApiService {
 
     /**
      * Perform an action on a dedicated server
-     * @param id Service ID
+     *
+     * @param id     Service ID
      * @param action Action to perform
      */
     public CompletableFuture<ApiResponse<Void>> performAction(String id, DedicatedServerAction action) {
-        record ActionBody(String action) {}
+        record ActionBody(String action) {
+        }
         return apiFetch.fetch(String.format("/services/%s/dedicated/action", id), "POST", new ActionBody(action.getValue()), Void.class);
     }
 
     /**
      * Get hardware components of a dedicated server
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<List<DedicatedServerHardwareComponent>>> getHardwareComponents(String id) {
@@ -36,6 +39,7 @@ public class DedicatedApiService {
 
     /**
      * Get dedicated server details
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<DedicatedServerDetails>> getDetails(String id) {
@@ -44,6 +48,7 @@ public class DedicatedApiService {
 
     /**
      * Get available OS templates for a dedicated server
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<List<DedicatedServerOsTemplate>>> getOsTemplates(String id) {
@@ -53,6 +58,7 @@ public class DedicatedApiService {
 
     /**
      * Get the reinstall status of a dedicated server
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<DedicatedServerReinstallStatus>> getReinstallStatus(String id) {
@@ -61,7 +67,8 @@ public class DedicatedApiService {
 
     /**
      * Reinstall a dedicated server with a new OS
-     * @param id Service ID
+     *
+     * @param id   Service ID
      * @param data Reinstall data (password, OS ID, and send email flag)
      */
     public CompletableFuture<ApiResponse<Void>> reinstall(String id, DedicatedServerReinstallData data) {
@@ -70,6 +77,7 @@ public class DedicatedApiService {
 
     /**
      * Get tasks for a dedicated server
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<List<DedicatedServerTask>>> getTasks(String id) {

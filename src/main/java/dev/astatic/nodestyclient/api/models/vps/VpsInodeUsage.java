@@ -4,4 +4,5 @@ public record VpsInodeUsage(
         long total,
         long used,
         long free
-) {}
+) {
+}

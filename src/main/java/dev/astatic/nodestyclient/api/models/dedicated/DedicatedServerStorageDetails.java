@@ -5,4 +5,5 @@ public record DedicatedServerStorageDetails(
         long total,
         long used,
         long free
-) {}
+) {
+}

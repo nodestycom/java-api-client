@@ -1,6 +1,8 @@
 # Nodesty Java API İstemcisi
 
-Bu depo, Nodesty API ile kolayca etkileşim kurmanızı sağlayan hafif ve asenkron bir Java istemci kütüphanesini içerir. Kullanıcı bilgileri, VPS yönetimi, güvenlik duvarı ayarları ve dedicated sunucu detayları gibi çeşitli Nodesty hizmetlerine erişim sağlar.
+Bu depo, Nodesty API ile kolayca etkileşim kurmanızı sağlayan hafif ve asenkron bir Java istemci kütüphanesini içerir.
+Kullanıcı bilgileri, VPS yönetimi, güvenlik duvarı ayarları ve dedicated sunucu detayları gibi çeşitli Nodesty
+hizmetlerine erişim sağlar.
 
 ## İçindekiler
 
@@ -8,11 +10,11 @@ Bu depo, Nodesty API ile kolayca etkileşim kurmanızı sağlayan hafif ve asenk
 - [Gereksinimler](#gereksinimler)
 - [Kurulum](#kurulum)
 - [Kullanım](#kullanım)
-  - [API İstemcisini Başlatma](#api-istemcisini-başlatma)
-  - [Kullanıcı Servisi](#kullanıcı-servisi)
-  - [VPS Servisi](#vps-servisi)
-  - [Güvenlik Duvarı Servisi](#güvenlik-duvarı-servisi)
-  - [Dedicated Sunucu Servisi](#dedicated-sunucu-servisi)
+    - [API İstemcisini Başlatma](#api-istemcisini-başlatma)
+    - [Kullanıcı Servisi](#kullanıcı-servisi)
+    - [VPS Servisi](#vps-servisi)
+    - [Güvenlik Duvarı Servisi](#güvenlik-duvarı-servisi)
+    - [Dedicated Sunucu Servisi](#dedicated-sunucu-servisi)
 - [Yanıt İşleme ve Hata Yönetimi](#yanıt-işleme-ve-hata-yönetimi)
 - [API Modelleri](#api-modelleri)
 - [Katkıda Bulunma](#katkıda-bulunma)
@@ -20,16 +22,23 @@ Bu depo, Nodesty API ile kolayca etkileşim kurmanızı sağlayan hafif ve asenk
 
 ## Özellikler
 
-- **Asenkron API Çağrıları**: `java.util.concurrent.CompletableFuture` kullanarak bloklamayan operasyonlar sağlar, uygulamanızın performansını artırır.
-- **Kapsamlı Modeller**: Nodesty API'den gelen verileri temsil eden, record sınıfları aracılığıyla iyi tanımlanmış, değişmez (immutable) Java modelleri içerir.
-- **Modüler Servisler**: Her bir API alanı (Örn: User, VPS, Firewall, Dedicated Server) için ayrı, düzenli ve yönetilebilir servis sınıfları bulunur.
-- **Özelleştirilebilir Seçenekler**: İstek zaman aşımı (Duration ile), yeniden deneme mekanizmaları ve diğer ağ ayarları gibi istemci davranışlarını RestClientOptions sınıfı ile kolayca yapılandırma yeteneği sunar.
-- **Otomatik JSON Serileştirme/Deserileştirme**: Popüler Gson kütüphanesi entegrasyonu sayesinde API istek gövdelerinin ve yanıtlarının otomatik olarak JSON'dan Java objelerine ve tersine dönüşümünü sağlar.
-- **Güvenli Kimlik Doğrulama**: Nodesty Kişisel Erişim Jetonu (PAT) kullanarak güvenli ve standart bir kimlik doğrulama yöntemi uygular.
+- **Asenkron API Çağrıları**: `java.util.concurrent.CompletableFuture` kullanarak bloklamayan operasyonlar sağlar,
+  uygulamanızın performansını artırır.
+- **Kapsamlı Modeller**: Nodesty API'den gelen verileri temsil eden, record sınıfları aracılığıyla iyi tanımlanmış,
+  değişmez (immutable) Java modelleri içerir.
+- **Modüler Servisler**: Her bir API alanı (Örn: User, VPS, Firewall, Dedicated Server) için ayrı, düzenli ve
+  yönetilebilir servis sınıfları bulunur.
+- **Özelleştirilebilir Seçenekler**: İstek zaman aşımı (Duration ile), yeniden deneme mekanizmaları ve diğer ağ ayarları
+  gibi istemci davranışlarını RestClientOptions sınıfı ile kolayca yapılandırma yeteneği sunar.
+- **Otomatik JSON Serileştirme/Deserileştirme**: Popüler Gson kütüphanesi entegrasyonu sayesinde API istek gövdelerinin
+  ve yanıtlarının otomatik olarak JSON'dan Java objelerine ve tersine dönüşümünü sağlar.
+- **Güvenli Kimlik Doğrulama**: Nodesty Kişisel Erişim Jetonu (PAT) kullanarak güvenli ve standart bir kimlik doğrulama
+  yöntemi uygular.
 
 ## Gereksinimler
 
-- Java Development Kit (JDK) 17 veya üzeri (Java 17'nin record sınıflarını ve Duration tipinin gelişmiş kullanımını gerektirir).
+- Java Development Kit (JDK) 17 veya üzeri (Java 17'nin record sınıflarını ve Duration tipinin gelişmiş kullanımını
+  gerektirir).
 - Maven veya Gradle (proje bağımlılıklarını yönetmek için).
 
 ## Kurulum
@@ -40,7 +49,8 @@ https://jitpack.io/#staticius/NodestyAPI/v1.0.1
 
 ## Kullanım
 
-İstemciyi kullanmaya başlamak için geçerli bir Nodesty Personal Access Token'a (PAT) ihtiyacınız olacaktır. Bu token'ı Nodesty kontrol panelinizdeki API ayarları bölümünden oluşturabilir veya mevcut birini kullanabilirsiniz.
+İstemciyi kullanmaya başlamak için geçerli bir Nodesty Personal Access Token'a (PAT) ihtiyacınız olacaktır. Bu token'ı
+Nodesty kontrol panelinizdeki API ayarları bölümünden oluşturabilir veya mevcut birini kullanabilirsiniz.
 
 Aşağıdaki örnekler, ana uygulama sınıfınızda (Main.java gibi) temel kullanım senaryolarını adım adım göstermektedir.
 
@@ -69,7 +79,9 @@ src/main/java/
 
 ### API İstemcisini Başlatma
 
-`NodestyApiClient` sınıfını başlatırken, Nodesty PAT'nizi zorunlu olarak belirtmeniz gerekir. Ayrıca, isteğe bağlı olarak istek zaman aşımı, yeniden deneme sayısı gibi ek seçenekleri `RestClientOptions` objesi ile yapılandırabilirsiniz.
+`NodestyApiClient` sınıfını başlatırken, Nodesty PAT'nizi zorunlu olarak belirtmeniz gerekir. Ayrıca, isteğe bağlı
+olarak istek zaman aşımı, yeniden deneme sayısı gibi ek seçenekleri `RestClientOptions` objesi ile
+yapılandırabilirsiniz.
 
 ```java
 import dev.astatic.nodestyclient.api.NodestyApiClient;
@@ -134,7 +146,8 @@ public class Main {
 
 ### Kullanıcı Servisi
 
-Kullanıcıyla ilgili işlemleri (`UserApiService` üzerinden) gerçekleştirebilirsiniz. Buna mevcut kullanıcının profil bilgilerini almak, faturaları listelemek veya belirli bir faturayı sorgulamak dahildir.
+Kullanıcıyla ilgili işlemleri (`UserApiService` üzerinden) gerçekleştirebilirsiniz. Buna mevcut kullanıcının profil
+bilgilerini almak, faturaları listelemek veya belirli bir faturayı sorgulamak dahildir.
 
 ```java
 import dev.astatic.nodestyclient.api.models.User;
@@ -192,7 +205,9 @@ client.user().getInvoiceById(invoiceId).thenAccept(response -> {
 
 ### VPS Servisi
 
-Sanal Sunucularla (VPS) ilgili işlemleri (`VpsApiService` üzerinden) gerçekleştirebilirsiniz. Buna VPS detaylarını almak, eylemler gerçekleştirmek (yeniden başlatma, başlatma, kapatma), yedekleri yönetmek veya işletim sistemi yeniden kurulumu yapmak dahildir.
+Sanal Sunucularla (VPS) ilgili işlemleri (`VpsApiService` üzerinden) gerçekleştirebilirsiniz. Buna VPS detaylarını
+almak, eylemler gerçekleştirmek (yeniden başlatma, başlatma, kapatma), yedekleri yönetmek veya işletim sistemi yeniden
+kurulumu yapmak dahildir.
 
 ```java
 import dev.astatic.nodestyclient.api.models.VpsDetails;
@@ -269,7 +284,9 @@ client.vps().reinstall(vpsServiceId, reinstallData).thenAccept(response -> {
 
 ### Güvenlik Duvarı Servisi
 
-Shield güvenlik duvarı ile ilgili işlemleri (`FirewallApiService` üzerinden) gerçekleştirebilirsiniz. Buna saldırı günlüklerini almak, IP adreslerini engellemek/beyaz listeye almak, ters DNS (rDNS) ayarlarını yönetmek ve güvenlik duvarı kurallarını yapılandırmak dahildir.
+Shield güvenlik duvarı ile ilgili işlemleri (`FirewallApiService` üzerinden) gerçekleştirebilirsiniz. Buna saldırı
+günlüklerini almak, IP adreslerini engellemek/beyaz listeye almak, ters DNS (rDNS) ayarlarını yönetmek ve güvenlik
+duvarı kurallarını yapılandırmak dahildir.
 
 ```java
 import dev.astatic.nodestyclient.api.models.FirewallAttackLog;
@@ -330,7 +347,9 @@ client.firewall().getReverseDns(firewallServiceId, ipAddress).thenAccept(respons
 
 ### Dedicated Sunucu Servisi
 
-Dedicated sunucularla ilgili işlemleri (`DedicatedApiService` üzerinden) gerçekleştirebilirsiniz. Buna sunucu detaylarını almak, donanım bilgilerini sorgulamak, eylemler gerçekleştirmek (yeniden başlatma, kapatma), işletim sistemi yeniden kurulumu yapmak ve bant genişliği kullanımını izlemek dahildir.
+Dedicated sunucularla ilgili işlemleri (`DedicatedApiService` üzerinden) gerçekleştirebilirsiniz. Buna sunucu
+detaylarını almak, donanım bilgilerini sorgulamak, eylemler gerçekleştirmek (yeniden başlatma, kapatma), işletim sistemi
+yeniden kurulumu yapmak ve bant genişliği kullanımını izlemek dahildir.
 
 ```java
 import dev.astatic.nodestyclient.api.models.DedicatedServerDetails;
@@ -413,21 +432,25 @@ client.dedicatedServer().getBandwidthUsage(dedicatedServiceId).thenAccept(respon
 
 ## Yanıt İşleme ve Hata Yönetimi
 
-Tüm API çağrıları, `CompletableFuture<ApiResponse<T>>` tipinde bir nesne döndürür. Bu, asenkron işlemleri yönetmek için Java'nın standart yaklaşımıdır.
+Tüm API çağrıları, `CompletableFuture<ApiResponse<T>>` tipinde bir nesne döndürür. Bu, asenkron işlemleri yönetmek için
+Java'nın standart yaklaşımıdır.
 
 ### Başarılı Yanıtlar
 
-- `.thenAccept()` metodunu kullanarak API isteği başarılı olduğunda (HTTP 2xx durum kodu) geri dönen veriyi işleyebilirsiniz.
+- `.thenAccept()` metodunu kullanarak API isteği başarılı olduğunda (HTTP 2xx durum kodu) geri dönen veriyi
+  işleyebilirsiniz.
 - `ApiResponse.isSuccess()` metodu `true` dönecektir ve `ApiResponse.getData()` ile veriye erişebilirsiniz.
 
 ### API Hataları
 
-- API'nin bir hata kodu (örneğin HTTP 4xx veya 5xx) ile yanıt vermesi durumunda, `ApiResponse.isSuccess()` metodu `false` dönecektir.
+- API'nin bir hata kodu (örneğin HTTP 4xx veya 5xx) ile yanıt vermesi durumunda, `ApiResponse.isSuccess()` metodu
+  `false` dönecektir.
 - `ApiResponse.getError()` ile API tarafından sağlanan hata mesajına erişebilirsiniz.
 
 ### Beklenmeyen Hatalar
 
-- Ağ bağlantısı sorunları, JSON ayrıştırma hataları veya diğer çalışma zamanı istisnaları gibi beklenmedik durumlar `.exceptionally()` bloğu ile yakalanabilir.
+- Ağ bağlantısı sorunları, JSON ayrıştırma hataları veya diğer çalışma zamanı istisnaları gibi beklenmedik durumlar
+  `.exceptionally()` bloğu ile yakalanabilir.
 
 ```java
 import java.util.concurrent.CompletableFuture;
@@ -456,24 +479,31 @@ someApiClientCall
 
 ## API Modelleri
 
-Bu kütüphanede, Nodesty API'den dönen tüm JSON yanıtlarını ve API'ye gönderilen istek gövdelerini temsil etmek için Java record sınıfları ve enum'lar kullanılır. Tüm bu model sınıfları `dev.astatic.nodestyclient.model` paketi altında yer alır.
+Bu kütüphanede, Nodesty API'den dönen tüm JSON yanıtlarını ve API'ye gönderilen istek gövdelerini temsil etmek için Java
+record sınıfları ve enum'lar kullanılır. Tüm bu model sınıfları `dev.astatic.nodestyclient.model` paketi altında yer
+alır.
 
 ### Genel Özellikler
 
 - **Immutable (Değişmez)**: record sınıfları, oluşturulduktan sonra durumları değiştirilemeyen immutable nesnelerdir.
-- **Gson Uyumluluğu**: Tüm modeller, Gson kütüphanesi ile sorunsuz bir şekilde JSON'a serileştirilir ve JSON'dan deserileştirilir.
-- **Kapsamlılık**: Her bir API yanıt yapısına veya istek gövdesine karşılık gelen ayrı bir record sınıfı veya enum bulunur.
+- **Gson Uyumluluğu**: Tüm modeller, Gson kütüphanesi ile sorunsuz bir şekilde JSON'a serileştirilir ve JSON'dan
+  deserileştirilir.
+- **Kapsamlılık**: Her bir API yanıt yapısına veya istek gövdesine karşılık gelen ayrı bir record sınıfı veya enum
+  bulunur.
 
 ### Örnek Model Kategorileri
 
 - **Kullanıcı Modelleri**: User, Service, Ticket, Invoice, Session, vb.
 - **VPS Modelleri**: VpsDetails, VpsAction, VpsBackup, VpsOsTemplate, VpsTask, vb.
 - **Güvenlik Duvarı Modelleri**: FirewallAttackLog, FirewallRule, AttackNotificationSettings, FirewallBlockAction, vb.
-- **Dedicated Sunucu Modelleri**: DedicatedServerDetails, DedicatedServerAction, DedicatedServerHardwareComponent, DedicatedServerReinstallStatus, vb.
+- **Dedicated Sunucu Modelleri**: DedicatedServerDetails, DedicatedServerAction, DedicatedServerHardwareComponent,
+  DedicatedServerReinstallStatus, vb.
 
 ## Katkıda Bulunma
 
-Projenin gelişimine katkıda bulunmak isteyen herkese kapımız açık! Eğer bu kütüphaneyi geliştirmek, hata düzeltmeleri yapmak veya yeni özellikler eklemek isterseniz, lütfen aşağıdaki adımları izleyerek bir Pull Request (PR) açmaktan çekinmeyin:
+Projenin gelişimine katkıda bulunmak isteyen herkese kapımız açık! Eğer bu kütüphaneyi geliştirmek, hata düzeltmeleri
+yapmak veya yeni özellikler eklemek isterseniz, lütfen aşağıdaki adımları izleyerek bir Pull Request (PR) açmaktan
+çekinmeyin:
 
 1. Bu depoyu (repository) kendi GitHub hesabınıza çatallayın (fork).
 2. Yeni bir özellik dalı oluşturun (`git checkout -b feature/AmazingNewFeature`).

@@ -4,4 +4,5 @@ public record DedicatedServerRamDetails(
         long total,
         long used,
         long free
-) {}
+) {
+}

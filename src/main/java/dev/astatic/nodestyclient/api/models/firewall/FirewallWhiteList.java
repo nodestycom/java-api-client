@@ -4,4 +4,5 @@ public record FirewallWhiteList(
         String id,
         String ipAddress,
         long createdAt
-) {}
+) {
+}

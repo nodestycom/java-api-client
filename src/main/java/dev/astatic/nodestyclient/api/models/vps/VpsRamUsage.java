@@ -4,4 +4,5 @@ public record VpsRamUsage(
         long total,
         long used,
         long free
-) {}
+) {
+}

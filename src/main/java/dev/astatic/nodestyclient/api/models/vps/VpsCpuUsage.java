@@ -4,4 +4,5 @@ public record VpsCpuUsage(
         double usage,
         int cores,
         int clockSpeed
-) {}
+) {
+}

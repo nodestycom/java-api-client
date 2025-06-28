@@ -18,4 +18,5 @@ public record User(
         boolean hasTwoFactor,
         long createdAt,
         long updatedAt
-) {}
+) {
+}

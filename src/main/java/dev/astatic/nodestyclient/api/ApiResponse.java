@@ -10,7 +10,8 @@ public class ApiResponse<T> {
     private String error;
     private T data;
 
-    public ApiResponse() {}
+    public ApiResponse() {
+    }
 
     public ApiResponse(boolean success, String error, T data) {
         this.success = success;

@@ -14,4 +14,5 @@ public record VpsDetails(
         VpsInodeUsage inode,
         VpsNetworkSpeed netspeed,
         VpsBandwidthDetails bandwidth
-) {}
+) {
+}

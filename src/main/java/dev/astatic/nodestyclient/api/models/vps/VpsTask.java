@@ -5,4 +5,5 @@ public record VpsTask(
         String progress,
         long startedAt,
         long updatedAt
-) {}
+) {
+}

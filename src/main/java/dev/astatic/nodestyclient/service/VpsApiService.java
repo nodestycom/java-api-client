@@ -18,18 +18,21 @@ public class VpsApiService {
 
     /**
      * Perform an action on a VPS
-     * @param id Service ID
+     *
+     * @param id     Service ID
      * @param action Action to perform
      */
     public CompletableFuture<ApiResponse<Void>> performAction(String id, VpsAction action) {
         return apiFetch.fetch(String.format("/services/%s/vps/action", id), "POST", new ActionBody(action.getValue()), Void.class);
     }
 
-    private record ActionBody(String action) {}
+    private record ActionBody(String action) {
+    }
 
     /**
      * Restore a VPS backup
-     * @param id Service ID
+     *
+     * @param id   Service ID
      * @param data Data for restoring backup (date and file)
      */
     public CompletableFuture<ApiResponse<Void>> restoreBackup(String id, VpsBackup data) {
@@ -38,15 +41,18 @@ public class VpsApiService {
 
     /**
      * Get VPS backups
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<List<VpsBackup>>> getBackups(String id) {
-        return apiFetch.fetch(String.format("/services/%s/vps/backups", id), "GET", null, new TypeToken<List<VpsBackup>>() {});
+        return apiFetch.fetch(String.format("/services/%s/vps/backups", id), "GET", null, new TypeToken<List<VpsBackup>>() {
+        });
     }
 
     /**
      * Change the password of a VPS
-     * @param id Service ID
+     *
+     * @param id   Service ID
      * @param data New password data (username and password)
      */
     public CompletableFuture<ApiResponse<Void>> changePassword(String id, VpsChangePasswordData data) {
@@ -55,6 +61,7 @@ public class VpsApiService {
 
     /**
      * Get VPS details
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<VpsDetails>> getDetails(String id) {
@@ -63,15 +70,18 @@ public class VpsApiService {
 
     /**
      * Get available OS templates for a VPS
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<List<VpsOsTemplate>>> getOsTemplates(String id) {
-        return apiFetch.fetch(String.format("/services/%s/vps/os-templates", id), "GET", null, new TypeToken<List<VpsOsTemplate>>() {});
+        return apiFetch.fetch(String.format("/services/%s/vps/os-templates", id), "GET", null, new TypeToken<List<VpsOsTemplate>>() {
+        });
     }
 
     /**
      * Reinstall a VPS with a new OS
-     * @param id Service ID
+     *
+     * @param id   Service ID
      * @param data Reinstall data (password and OS ID)
      */
     public CompletableFuture<ApiResponse<Void>> reinstall(String id, VpsReinstallData data) {
@@ -80,9 +90,11 @@ public class VpsApiService {
 
     /**
      * Get VPS tasks
+     *
      * @param id Service ID
      */
     public CompletableFuture<ApiResponse<List<VpsTask>>> getTasks(String id) {
-        return apiFetch.fetch(String.format("/services/%s/vps/tasks", id), "GET", null, new TypeToken<List<VpsTask>>() {});
+        return apiFetch.fetch(String.format("/services/%s/vps/tasks", id), "GET", null, new TypeToken<List<VpsTask>>() {
+        });
     }
 }

@@ -7,4 +7,5 @@ public record FirewallAttackLog(
         String destinationPort,
         String action,
         String protocol
-) {}
+) {
+}

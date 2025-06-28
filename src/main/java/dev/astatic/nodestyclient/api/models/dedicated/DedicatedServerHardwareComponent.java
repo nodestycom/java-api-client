@@ -5,4 +5,5 @@ public record DedicatedServerHardwareComponent(
         String model,
         double value,
         String valueSuffix
-) {}
+) {
+}

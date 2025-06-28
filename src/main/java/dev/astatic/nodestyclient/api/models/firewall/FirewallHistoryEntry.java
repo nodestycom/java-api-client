@@ -5,4 +5,5 @@ public record FirewallHistoryEntry(
         String ip,
         FirewallHistoryAction action,
         String user
-) {}
+) {
+}

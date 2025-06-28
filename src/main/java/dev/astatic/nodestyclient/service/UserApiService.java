@@ -20,11 +20,13 @@ public class UserApiService {
      * Get the current user services
      */
     public CompletableFuture<ApiResponse<List<Service>>> getServices() {
-        return apiFetch.fetch("/services", "GET", null, new TypeToken<List<Service>>() {});
+        return apiFetch.fetch("/services", "GET", null, new TypeToken<List<Service>>() {
+        });
     }
 
     /**
      * Get the current user ticket by ID
+     *
      * @param ticketId Ticket ID
      */
     public CompletableFuture<ApiResponse<Ticket>> getTicketById(String ticketId) {
@@ -35,7 +37,8 @@ public class UserApiService {
      * Get the current user tickets
      */
     public CompletableFuture<ApiResponse<List<Ticket>>> getTickets() {
-        return apiFetch.fetch("/tickets", "GET", null, new TypeToken<List<Ticket>>() {});
+        return apiFetch.fetch("/tickets", "GET", null, new TypeToken<List<Ticket>>() {
+        });
     }
 
     /**
@@ -47,6 +50,7 @@ public class UserApiService {
 
     /**
      * Get the current user invoice by ID
+     *
      * @param invoiceId Invoice ID
      */
     public CompletableFuture<ApiResponse<Invoice>> getInvoiceById(String invoiceId) {
@@ -57,18 +61,21 @@ public class UserApiService {
      * Get the current user invoices
      */
     public CompletableFuture<ApiResponse<List<Invoice>>> getInvoices() {
-        return apiFetch.fetch("/users/@me/invoices", "GET", null, new TypeToken<List<Invoice>>() {});
+        return apiFetch.fetch("/users/@me/invoices", "GET", null, new TypeToken<List<Invoice>>() {
+        });
     }
 
     /**
      * Get the current user sessions
      */
     public CompletableFuture<ApiResponse<List<Session>>> getSessions() {
-        return apiFetch.fetch("/users/@me/sessions", "GET", null, new TypeToken<List<Session>>() {});
+        return apiFetch.fetch("/users/@me/sessions", "GET", null, new TypeToken<List<Session>>() {
+        });
     }
 
     /**
      * Delete a session
+     *
      * @param sessionId Session ID
      */
     public CompletableFuture<ApiResponse<Void>> deleteSession(String sessionId) {

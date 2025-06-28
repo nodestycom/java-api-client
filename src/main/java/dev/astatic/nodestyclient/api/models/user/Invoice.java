@@ -13,4 +13,5 @@ public record Invoice(
         InvoiceStatus status,
         double appliedBalance,
         List<InvoiceItem> items
-) {}
+) {
+}
