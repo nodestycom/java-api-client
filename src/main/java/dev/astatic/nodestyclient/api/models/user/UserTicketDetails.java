@@ -2,14 +2,12 @@ package dev.astatic.nodestyclient.api.models.user;
 
 import java.util.List;
 
-public record Ticket(
+public record UserTicketDetails(
         String id,
         String subject,
-        TicketStatus status,
-        String department,
+        String status,
         String priority,
-        long createdAt,
-        long updatedAt,
+        String lastReply,
+        boolean marked,
         List<TicketMessage> messages
-) {
-}
+) {}

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.astatic.nodestyclient"
-version = "1.0.1"
+version = "1.0.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21

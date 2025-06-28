@@ -9,6 +9,7 @@ import dev.astatic.nodestyclient.api.models.user.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+
 public class UserApiService {
     private final ApiFetchFunc apiFetch;
 
@@ -17,68 +18,64 @@ public class UserApiService {
     }
 
     /**
-     * Get the current user services
+     * Get the current user services.
+     * @return List of services for the current user.
      */
-    public CompletableFuture<ApiResponse<List<Service>>> getServices() {
-        return apiFetch.fetch("/services", "GET", null, new TypeToken<List<Service>>() {
-        });
+    public CompletableFuture<ApiResponse<List<UserProduct>>> getServices() {
+        return apiFetch.fetch("/services", "GET", null,
+                apiFetch.getTypeReferenceForList(UserProduct.class));
     }
 
     /**
-     * Get the current user ticket by ID
-     *
-     * @param ticketId Ticket ID
+     * Get the current user ticket by ID.
+     * @param id Ticket ID.
+     * @return Ticket details for the specified ID.
      */
-    public CompletableFuture<ApiResponse<Ticket>> getTicketById(String ticketId) {
-        return apiFetch.fetch(String.format("/tickets/%s", ticketId), "GET", null, Ticket.class);
+    public CompletableFuture<ApiResponse<UserTicketDetails>> getTicket(String id) {
+        return apiFetch.fetch("/tickets/" + id, "GET", null, UserTicketDetails.class);
     }
 
     /**
-     * Get the current user tickets
+     * Get the current user tickets.
+     * @return List of tickets for the current user.
      */
-    public CompletableFuture<ApiResponse<List<Ticket>>> getTickets() {
-        return apiFetch.fetch("/tickets", "GET", null, new TypeToken<List<Ticket>>() {
-        });
+    public CompletableFuture<ApiResponse<List<UserTicketSummary>>> getTickets() {
+        return apiFetch.fetch("/tickets", "GET", null,
+                apiFetch.getTypeReferenceForList(UserTicketSummary.class));
     }
 
     /**
-     * Get the current user information
+     * Get the current user information.
+     * @return Current user information.
      */
-    public CompletableFuture<ApiResponse<User>> getCurrentUser() {
-        return apiFetch.fetch("/users/@me", "GET", null, User.class);
+    public CompletableFuture<ApiResponse<CurrentUser>> getCurrentUser() {
+        return apiFetch.fetch("/users/@me", "GET", null, CurrentUser.class);
     }
 
     /**
-     * Get the current user invoice by ID
-     *
-     * @param invoiceId Invoice ID
+     * Get the current user invoice by ID.
+     * @param id Invoice ID.
+     * @return Invoice details for the specified ID.
      */
-    public CompletableFuture<ApiResponse<Invoice>> getInvoiceById(String invoiceId) {
-        return apiFetch.fetch(String.format("/users/@me/invoices/%s", invoiceId), "GET", null, Invoice.class);
+    public CompletableFuture<ApiResponse<UserInvoiceDetails>> getInvoice(String id) {
+        return apiFetch.fetch("/users/@me/invoices/" + id, "GET", null, UserInvoiceDetails.class);
     }
 
     /**
-     * Get the current user invoices
+     * Get the current user invoices.
+     * @return List of invoices for current user.
      */
-    public CompletableFuture<ApiResponse<List<Invoice>>> getInvoices() {
-        return apiFetch.fetch("/users/@me/invoices", "GET", null, new TypeToken<List<Invoice>>() {
-        });
+    public CompletableFuture<ApiResponse<List<UserInvoiceSummary>>> getInvoices() {
+        return apiFetch.fetch("/users/@me/invoices", "GET", null,
+                apiFetch.getTypeReferenceForList(UserInvoiceSummary.class));
     }
 
     /**
-     * Get the current user sessions
+     * Get the current user sessions.
+     * @return List of user sessions.
      */
-    public CompletableFuture<ApiResponse<List<Session>>> getSessions() {
-        return apiFetch.fetch("/users/@me/sessions", "GET", null, new TypeToken<List<Session>>() {
-        });
-    }
-
-    /**
-     * Delete a session
-     *
-     * @param sessionId Session ID
-     */
-    public CompletableFuture<ApiResponse<Void>> deleteSession(String sessionId) {
-        return apiFetch.fetch(String.format("/users/@me/sessions/%s", sessionId), "DELETE", null, Void.class);
+    public CompletableFuture<ApiResponse<List<UserSession>>> getSessions() {
+        return apiFetch.fetch("/users/@me/sessions", "GET", null,
+                apiFetch.getTypeReferenceForList(UserSession.class));
     }
 }

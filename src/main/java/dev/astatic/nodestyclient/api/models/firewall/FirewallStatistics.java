@@ -1,8 +1,7 @@
 package dev.astatic.nodestyclient.api.models.firewall;
 
 public record FirewallStatistics(
-        long timestamp,
-        String totalTraffic,
-        String attackTraffic
-) {
-}
+        String timestamp,
+        String totalPassTraffic,
+        String totalDropTraffic
+) {}

@@ -3,16 +3,18 @@ package dev.astatic.nodestyclient.api.models.vps;
 import java.util.List;
 
 public record VpsDetails(
+        long vpsId,
+        long proxmoxId,
         String hostname,
-        List<String> ipAddresses,
-        String status,
-        String os,
-        long createdAt,
-        long updatedAt,
-        VpsCpuUsage cpu,
-        VpsRamUsage ram,
-        VpsInodeUsage inode,
-        VpsNetworkSpeed netspeed,
-        VpsBandwidthDetails bandwidth
-) {
-}
+        int osReinstallLimit,
+        boolean status,
+        VpsInfoVnc vnc,
+        VpsInfoOs os,
+        VpsInfoDisk disk,
+        List<String> ips,
+        VpsInfoCpu cpu,
+        VpsInfoRam ram,
+        VpsInfoInode inode,
+        VpsInfoNetspeed netSpeed,
+        VpsInfoBandwidth bandwidth
+) {}

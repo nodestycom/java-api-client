@@ -1,12 +1,10 @@
 package dev.astatic.nodestyclient.api.models.user;
 
-public record Session(
+public record UserSession(
         String id,
         String ip,
         String location,
-        SessionOs os,
+        String os,
         String platform,
-        String browser,
-        long lastActivity
-) {
-}
+        String lastSeen
+) {}

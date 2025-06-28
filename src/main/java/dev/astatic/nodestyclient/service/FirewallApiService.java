@@ -1,6 +1,5 @@
 package dev.astatic.nodestyclient.service;
 
-import com.google.gson.reflect.TypeToken;
 import dev.astatic.nodestyclient.api.ApiFetchFunc;
 import dev.astatic.nodestyclient.api.ApiResponse;
 import dev.astatic.nodestyclient.api.models.firewall.*;
@@ -16,157 +15,108 @@ public class FirewallApiService {
     }
 
     /**
-     * Get nShield attack logs for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id Service ID
+     * Get nShield statistics for a specific IP address on a VPS or Dedicated Server
+     * @param serviceId Service ID
      * @param ip IP Address
+     * @return List of attack logs for the specified IP address
      */
-    public CompletableFuture<ApiResponse<List<FirewallAttackLog>>> getAttackLogs(String id, String ip) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/attack-logs", id, ip), "GET", null, new TypeToken<List<FirewallAttackLog>>() {
-        });
+    public CompletableFuture<ApiResponse<List<FirewallAttackLog>>> getAttackLogs(String serviceId, String ip) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/attack-logs", "GET", null, apiFetch.getTypeReferenceForList(FirewallAttackLog.class));
     }
 
     /**
      * Get attack notification settings for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id Service ID
+     * @param serviceId Service ID
      * @param ip IP Address
+     * @return Attack notification settings for the specified service and IP address
      */
-    public CompletableFuture<ApiResponse<AttackNotificationSettings>> getAttackNotificationSettings(String id, String ip) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/attack-notification", id, ip), "GET", null, AttackNotificationSettings.class);
+    public CompletableFuture<ApiResponse<AttackNotificationSettings>> getAttackNotificationSettings(String serviceId, String ip) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/attack-notification", "GET", null, AttackNotificationSettings.class);
     }
 
     /**
      * Update attack notification settings for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id       Service ID
-     * @param ip       IP Address
-     * @param settings New attack notification settings
-     */
-    public CompletableFuture<ApiResponse<AttackNotificationSettings>> updateAttackNotificationSettings(String id, String ip, AttackNotificationSettings settings) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/attack-notification", id, ip), "PUT", settings, AttackNotificationSettings.class);
-    }
-
-    /**
-     * Get block action history for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id Service ID
+     * @param serviceId Service ID
      * @param ip IP Address
+     * @param data New attack notification settings
+     * @return Attack notification settings updated successfully
      */
-    public CompletableFuture<ApiResponse<List<FirewallHistoryEntry>>> getBlockHistory(String id, String ip) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/block-history", id, ip), "GET", null, new TypeToken<List<FirewallHistoryEntry>>() {
-        });
+    public CompletableFuture<ApiResponse<AttackNotificationSettings>> updateAttackNotificationSettings(String serviceId, String ip, AttackNotificationSettings data) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/attack-notification", "PUT", data, AttackNotificationSettings.class);
     }
 
     /**
-     * Block or unblock an IP address
-     *
-     * @param id     Service ID
-     * @param ip     IP Address to block or unblock
-     * @param action Action to perform (block or unblock)
-     */
-    public CompletableFuture<ApiResponse<Void>> blockIp(String id, String ip, FirewallBlockAction action) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/%s", id, ip, action.getValue()), "POST", null, Void.class);
-    }
-
-    /**
-     * Get nShield reverse DNS for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id Service ID
+     * Reset reverse DNS (rDNS) for a specific IP address on a VPS or Dedicated Server
+     * @param serviceId Service ID
      * @param ip IP Address
+     * @return Reverse DNS (rDNS) set successfully
      */
-    public CompletableFuture<ApiResponse<FirewallReverseDns>> getReverseDns(String id, String ip) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/rdns", id, ip), "GET", null, FirewallReverseDns.class);
+    public CompletableFuture<ApiResponse<Void>> resetReverseDns(String serviceId, String ip) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/rdns", "DELETE", null, Void.class);
     }
 
     /**
-     * Update nShield reverse DNS for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id   Service ID
-     * @param ip   IP Address
-     * @param rdns Reverse DNS entry
+     * Get reverse DNS (rDNS) for a specific IP address on a VPS or Dedicated Server
+     * @param serviceId Service ID
+     * @param ip IP Address
+     * @return Reverse DNS (rDNS) for the specified IP address
      */
-    public CompletableFuture<ApiResponse<FirewallReverseDns>> updateReverseDns(String id, String ip, String rdns) {
-        record RdnsUpdateBody(String rdns) {
-        }
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/rdns", id, ip), "PUT", new RdnsUpdateBody(rdns), FirewallReverseDns.class);
+    public CompletableFuture<ApiResponse<FirewallReverseDns>> getReverseDns(String serviceId, String ip) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/rdns", "GET", null, FirewallReverseDns.class);
+    }
+
+    /**
+     * Set or update reverse DNS (rDNS) for a specific IP address on a VPS or Dedicated Server
+     * @param serviceId Service ID
+     * @param ip IP Address
+     * @param rdns Reverse DNS entry to set for the IP address
+     * @return Reverse DNS (rDNS) set successfully
+     */
+    public CompletableFuture<ApiResponse<Void>> upsertReverseDns(String serviceId, String ip, String rdns) {
+        // API body expects {"rdns": "example.domain.com"}, so we create a FirewallReverseDns object.
+        FirewallReverseDns data = new FirewallReverseDns(rdns);
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/rdns", "PUT", data, Void.class);
+    }
+
+    /**
+     * Delete a nShield rule for a specific IP address on a VPS or Dedicated Server
+     * @param serviceId Service ID
+     * @param ip IP Address
+     * @param ruleId Rule ID
+     * @return Rule deleted successfully
+     */
+    public CompletableFuture<ApiResponse<Void>> deleteRule(String serviceId, String ip, String ruleId) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/rules/" + ruleId, "DELETE", null, Void.class);
     }
 
     /**
      * Get nShield rules for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id Service ID
+     * @param serviceId Service ID
      * @param ip IP Address
+     * @return List of nShield rules for the specified service and IP address
      */
-    public CompletableFuture<ApiResponse<List<FirewallRule>>> getRules(String id, String ip) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/rules", id, ip), "GET", null, new TypeToken<List<FirewallRule>>() {
-        });
+    public CompletableFuture<ApiResponse<List<FirewallRule>>> getRules(String serviceId, String ip) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/rules", "GET", null, apiFetch.getTypeReferenceForList(FirewallRule.class));
     }
 
     /**
      * Create a new nShield rule for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id   Service ID
-     * @param ip   IP Address
-     * @param data Rule data (port and app ID)
+     * @param serviceId Service ID
+     * @param ip IP Address
+     * @param data Rule data to create (port, appId)
+     * @return Rule created successfully
      */
-    public CompletableFuture<ApiResponse<FirewallRule>> createRule(String id, String ip, FirewallCreateRuleData data) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/rules", id, ip), "POST", data, FirewallRule.class);
-    }
-
-    /**
-     * Delete an existing nShield rule for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id     Service ID
-     * @param ip     IP Address
-     * @param ruleId Rule ID to delete
-     */
-    public CompletableFuture<ApiResponse<Void>> deleteRule(String id, String ip, int ruleId) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/rules/%s", id, ip, ruleId), "DELETE", null, Void.class);
+    public CompletableFuture<ApiResponse<Void>> createRule(String serviceId, String ip, FirewallCreateRuleData data) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/rules", "POST", data, Void.class);
     }
 
     /**
      * Get nShield statistics for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id Service ID
+     * @param serviceId Service ID
      * @param ip IP Address
+     * @return nShield statistics for the specified IP address
      */
-    public CompletableFuture<ApiResponse<FirewallStatistics>> getStatistics(String id, String ip) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/statistics", id, ip), "GET", null, FirewallStatistics.class);
-    }
-
-    /**
-     * Get nShield white list for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id Service ID
-     * @param ip IP Address
-     */
-    public CompletableFuture<ApiResponse<List<FirewallWhiteList>>> getWhiteList(String id, String ip) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/whitelist", id, ip), "GET", null, new TypeToken<List<FirewallWhiteList>>() {
-        });
-    }
-
-    /**
-     * Add an IP address to the nShield white list for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id        Service ID
-     * @param ip        Target IP Address (service's IP)
-     * @param ipAddress IP Address to whitelist
-     */
-    public CompletableFuture<ApiResponse<FirewallWhiteList>> addWhiteList(String id, String ip, String ipAddress) {
-        record WhitelistAddBody(String ipAddress) {
-        }
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/whitelist", id, ip), "POST", new WhitelistAddBody(ipAddress), FirewallWhiteList.class);
-    }
-
-    /**
-     * Remove an IP address from the nShield white list for a specific IP address on a VPS or Dedicated Server
-     *
-     * @param id          Service ID
-     * @param ip          Target IP Address (service's IP)
-     * @param whitelistId Whitelist entry ID to remove
-     */
-    public CompletableFuture<ApiResponse<Void>> removeWhiteList(String id, String ip, String whitelistId) {
-        return apiFetch.fetch(String.format("/services/%s/firewall/%s/whitelist/%s", id, ip, whitelistId), "DELETE", null, Void.class);
+    public CompletableFuture<ApiResponse<List<FirewallStatistics>>> getStatistics(String serviceId, String ip) {
+        return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/stats", "GET", null, apiFetch.getTypeReferenceForList(FirewallStatistics.class));
     }
 }

@@ -5,5 +5,4 @@ public record FirewallRule(
         String protocol,
         String service,
         int port
-) {
-}
+) {}

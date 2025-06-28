@@ -1,8 +1,7 @@
 package dev.astatic.nodestyclient.api.models.vps;
 
-public record VpsInodeUsage(
+public record VpsInfoRam(
         long total,
         long used,
         long free
-) {
-}
+) {}

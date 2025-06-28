@@ -2,16 +2,13 @@ package dev.astatic.nodestyclient.api.models.user;
 
 import java.util.List;
 
-public record Invoice(
-        String id,
-        String invoiceNumber,
-        long dateCreated,
-        long dateDue,
+public record UserInvoiceDetails(
+        long id,
+        long dueDate,
         Long datePaid,
         double subTotal,
         double total,
-        InvoiceStatus status,
+        String status,
         double appliedBalance,
         List<InvoiceItem> items
-) {
-}
+) {}

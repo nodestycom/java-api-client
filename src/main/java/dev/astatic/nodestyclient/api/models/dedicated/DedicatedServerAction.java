@@ -3,14 +3,12 @@ package dev.astatic.nodestyclient.api.models.dedicated;
 import com.google.gson.annotations.SerializedName;
 
 public enum DedicatedServerAction {
-    @SerializedName("boot")
-    BOOT("boot"),
-    @SerializedName("reboot")
-    REBOOT("reboot"),
-    @SerializedName("shutdown")
-    SHUTDOWN("shutdown"),
-    @SerializedName("kill")
-    KILL("kill");
+    @SerializedName("setPowerOff")
+    SET_POWER_OFF("setPowerOff"),
+    @SerializedName("setPowerOn")
+    SET_POWER_ON("setPowerOn"),
+    @SerializedName("setPowerReset")
+    SET_POWER_RESET("setPowerReset");
 
     private final String value;
 
