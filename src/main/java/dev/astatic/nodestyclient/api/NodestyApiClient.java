@@ -8,7 +8,10 @@ import dev.astatic.nodestyclient.service.DedicatedApiService;
 import dev.astatic.nodestyclient.service.FirewallApiService;
 import dev.astatic.nodestyclient.service.UserApiService;
 import dev.astatic.nodestyclient.service.VpsApiService;
-import org.asynchttpclient.*;
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.AsyncHttpClientConfig;
+import org.asynchttpclient.DefaultAsyncHttpClient;
+import org.asynchttpclient.DefaultAsyncHttpClientConfig;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -71,7 +74,7 @@ public class NodestyApiClient implements AutoCloseable {
             requestBodyString = gson.toJson(body);
         }
 
-        BoundRequestBuilder requestBuilder = asyncHttpClient.prepare(method, url)
+        org.asynchttpclient.BoundRequestBuilder requestBuilder = asyncHttpClient.prepare(method, url)
                 .addHeader("Authorization", "PAT " + options.getAccessToken())
                 .addHeader("Content-Type", "application/json")
                 .setRequestTimeout(Duration.ofDays((int) options.getTimeout().toMillis()));
