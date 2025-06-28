@@ -246,7 +246,7 @@ client.vps().reinstall(vpsServiceId, reinstallData).thenAccept(response -> {
 
 ### Güvenlik Duvarı Servisi
 
-Shield güvenlik duvarı ile ilgili işlemleri (`FirewallApiService` üzerinden) gerçekleştirebilirsiniz. Buna saldırı günlüklerini almak, IP adreslerini engellemek/beyaz listeye almak, ters DNS (rDNS) ayarlarını yönetmek ve güvenlik duvarı kurallarını yapılandırmak dahildir.
+nShield güvenlik duvarı ile ilgili işlemleri (`FirewallApiService` üzerinden) gerçekleştirebilirsiniz. Buna saldırı günlüklerini almak, IP adreslerini engellemek/beyaz listeye almak, ters DNS (rDNS) ayarlarını yönetmek ve güvenlik duvarı kurallarını yapılandırmak dahildir.
 
 ```java
 import dev.astatic.nodestyclient.api.models.FirewallAttackLog;
