@@ -6,12 +6,6 @@
 
 nodesty.com'un güçlü API'sine Java uygulamalarınızdan kolayca erişmenizi sağlayan modern, asenkron ve tip güvenli bir istemci kütüphanesi.
 
-## 👨‍💻 Yazar
-
-**Staticius**
-- GitHub: [@staticius](https://github.com/staticius)
-- Bu proje Nodesty topluluğu için sevgiyle geliştirilmiştir
-
 ## 🚀 Özellikler
 
 - **⚡ Asenkron Operasyonlar**: `CompletableFuture` ile tam asenkron destek
@@ -332,4 +326,4 @@ Bu proje faydalı bulduysanız, lütfen ⭐ vererek destekleyin!
 
 ---
 
-**Made with ❤️ for Nodesty Community by [Staticius](https://github.com/staticius)**
+**Made with ❤️ for Nodesty Community.
