@@ -5,6 +5,7 @@ import dev.astatic.nodestyclient.api.ApiFetchFunc;
 import dev.astatic.nodestyclient.api.ApiResponse;
 import dev.astatic.nodestyclient.api.models.vps.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -24,7 +25,7 @@ public class VpsApiService {
      */
     public CompletableFuture<ApiResponse<Void>> performAction(String id, VpsAction action) {
         return apiFetch.fetch("/services/" + id + "/vps/action", "POST",
-                java.util.Collections.singletonMap("action", action.getValue()), Void.class);
+                Collections.singletonMap("action", action.getValue()), Void.class);
     }
 
     /**
