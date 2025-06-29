@@ -1,16 +1,18 @@
 package dev.astatic.nodestyclient.api.models.vps;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
 
+@Getter
 public enum VpsAction {
-    @SerializedName("boot")
-    BOOT("boot"),
-    @SerializedName("reboot")
-    REBOOT("reboot"),
-    @SerializedName("shutdown")
-    SHUTDOWN("shutdown"),
-    @SerializedName("kill")
-    KILL("kill");
+    @SerializedName("start")
+    START("start"),
+    @SerializedName("stop")
+    STOP("stop"),
+    @SerializedName("restart")
+    RESTART("restart"),
+    @SerializedName("poweroff")
+    POWEROFF("poweroff"),;
 
     private final String value;
 
@@ -18,7 +20,4 @@ public enum VpsAction {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
 }

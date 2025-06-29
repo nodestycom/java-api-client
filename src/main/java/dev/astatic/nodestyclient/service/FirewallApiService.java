@@ -73,7 +73,6 @@ public class FirewallApiService {
      * @return Reverse DNS (rDNS) set successfully
      */
     public CompletableFuture<ApiResponse<Void>> upsertReverseDns(String serviceId, String ip, String rdns) {
-        // API body expects {"rdns": "example.domain.com"}, so we create a FirewallReverseDns object.
         FirewallReverseDns data = new FirewallReverseDns(rdns);
         return apiFetch.fetch("/services/" + serviceId + "/firewall/" + ip + "/rdns", "PUT", data, Void.class);
     }

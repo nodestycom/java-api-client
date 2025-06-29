@@ -23,8 +23,6 @@ public class DedicatedApiService {
      * @return Action executed successfully
      */
     public CompletableFuture<ApiResponse<Void>> performAction(String id, DedicatedServerAction action) {
-        // API body expects {"action": "enumValue"}, so we create an anonymous object or map.
-        // For simplicity and direct mapping, let's pass a Map.
         return apiFetch.fetch("/services/" + id + "/dedicated/action", "POST",
                 java.util.Collections.singletonMap("action", action.getValue()), Void.class);
     }
