@@ -37,7 +37,7 @@ nodesty.com'un güçlü API'sine Java uygulamalarınızdan kolayca erişmenizi s
     <dependency>
 	    <groupId>com.github.nodestycom</groupId>
 	    <artifactId>java-api-client</artifactId>
-	    <version>1.0.0</version>
+	    <version>main-SNAPSHOT</version>
 	</dependency>
 ```
 
@@ -49,7 +49,7 @@ repositories {
 		}
 
 dependencies {
-implementation("com.github.nodestycom:java-api-client:1.0.0")
+implementation("com.github.nodestycom:java-api-client:main-SNAPSHOT")
 	}
 ```
 
