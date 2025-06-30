@@ -1,6 +1,5 @@
 package dev.astatic.nodestyclient.service;
 
-import com.google.gson.reflect.TypeToken;
 import dev.astatic.nodestyclient.api.ApiFetchFunc;
 import dev.astatic.nodestyclient.api.ApiResponse;
 import dev.astatic.nodestyclient.api.models.dedicated.*;

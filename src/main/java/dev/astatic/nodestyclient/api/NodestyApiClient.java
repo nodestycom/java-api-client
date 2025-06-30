@@ -8,10 +8,7 @@ import dev.astatic.nodestyclient.service.DedicatedApiService;
 import dev.astatic.nodestyclient.service.FirewallApiService;
 import dev.astatic.nodestyclient.service.UserApiService;
 import dev.astatic.nodestyclient.service.VpsApiService;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.AsyncHttpClientConfig;
-import org.asynchttpclient.DefaultAsyncHttpClient;
-import org.asynchttpclient.DefaultAsyncHttpClientConfig;
+import org.asynchttpclient.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -21,7 +18,9 @@ import java.util.concurrent.CompletableFuture;
 
 
 public class NodestyApiClient implements AutoCloseable {
+
     private static final String API_BASE_URL = "https://nodesty.com/api";
+
     private final AsyncHttpClient asyncHttpClient;
     private final Gson gson;
     private final RestClientOptions options;
@@ -65,6 +64,7 @@ public class NodestyApiClient implements AutoCloseable {
         this.vpsApiService = new VpsApiService(fetchFunction);
         this.firewallApiService = new FirewallApiService(fetchFunction);
         this.dedicatedServerApiService = new DedicatedApiService(fetchFunction);
+
     }
 
     private <T> CompletableFuture<ApiResponse<T>> executeFetch(String path, String method, Object body, Type responseType) {
@@ -74,7 +74,7 @@ public class NodestyApiClient implements AutoCloseable {
             requestBodyString = gson.toJson(body);
         }
 
-        org.asynchttpclient.BoundRequestBuilder requestBuilder = asyncHttpClient.prepare(method, url)
+        BoundRequestBuilder requestBuilder = asyncHttpClient.prepare(method, url)
                 .addHeader("Authorization", "PAT " + options.getAccessToken())
                 .addHeader("Content-Type", "application/json")
                 .setRequestTimeout(Duration.ofDays((int) options.getTimeout().toMillis()));
