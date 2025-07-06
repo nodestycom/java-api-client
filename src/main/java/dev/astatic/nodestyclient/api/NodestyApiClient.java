@@ -12,7 +12,6 @@ import org.asynchttpclient.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,7 +32,8 @@ public class NodestyApiClient implements AutoCloseable {
     public NodestyApiClient(RestClientOptions options) {
         this.options = options;
 
-        AsyncHttpClientConfig clientConfig = new DefaultAsyncHttpClientConfig.Builder()
+        AsyncHttpClientConfig clientConfig = new DefaultAsyncHttpClientConfig
+                .Builder()
                 .setConnectTimeout(options.getTimeout())
                 .setRequestTimeout(options.getTimeout())
                 .setPooledConnectionIdleTimeout(options.getTimeout())
@@ -44,9 +44,7 @@ public class NodestyApiClient implements AutoCloseable {
                 .build();
 
         this.asyncHttpClient = new DefaultAsyncHttpClient(clientConfig);
-        this.gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
 
         ApiFetchFunc fetchFunction = new ApiFetchFunc() {
             @Override
@@ -74,37 +72,63 @@ public class NodestyApiClient implements AutoCloseable {
             requestBodyString = gson.toJson(body);
         }
 
-        BoundRequestBuilder requestBuilder = asyncHttpClient.prepare(method, url)
-                .addHeader("Authorization", "PAT " + options.getAccessToken())
-                .addHeader("Content-Type", "application/json")
-                .setRequestTimeout(Duration.ofDays((int) options.getTimeout().toMillis()));
+        BoundRequestBuilder requestBuilder = asyncHttpClient.prepare(method, url).addHeader("Authorization", "PAT " + options.getAccessToken()).addHeader("Content-Type", "application/json");
+
 
         if (requestBodyString != null) {
             requestBuilder.setBody(requestBodyString);
         }
 
-        return requestBuilder.execute()
-                .toCompletableFuture()
-                .thenApply(response -> {
-                    String responseBody = response.getResponseBody();
+        return requestBuilder.execute().toCompletableFuture().thenApply(response -> {
+            String responseBody = response.getResponseBody();
+            int statusCode = response.getStatusCode();
+
+            try {
+                if (statusCode >= 200 && statusCode < 300) {
                     try {
-                        if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-                            return gson.fromJson(responseBody, TypeToken.getParameterized(ApiResponse.class, responseType).getType());
-                        } else {
-                            ApiResponse<T> errorResponse = gson.fromJson(responseBody, TypeToken.getParameterized(ApiResponse.class, responseType).getType());
-                            if (errorResponse == null) {
-                                errorResponse = new ApiResponse<>(false, "API error: Status Code " + response.getStatusCode() + ", Response: " + responseBody, null);
-                            } else if (errorResponse.getError() == null) {
-                                errorResponse.setError("API error: Status Code " + response.getStatusCode() + ", Response: " + responseBody);
-                            }
-                            return errorResponse;
+                        ApiResponse<T> apiResponse = gson.fromJson(responseBody, TypeToken.getParameterized(ApiResponse.class, responseType).getType());
+
+                        if (apiResponse != null && apiResponse.isSuccess()) {
+                            return apiResponse;
                         }
+
                     } catch (JsonSyntaxException e) {
-                        return new ApiResponse<>(false, "JSON parsing error: " + e.getMessage() + " - Response: " + responseBody, null);
-                    } catch (Exception e) {
-                        return new ApiResponse<>(false, "Unexpected error while processing request: " + e.getMessage() + " - Response: " + responseBody, null);
                     }
-                });
+
+                    try {
+                        T data = gson.fromJson(responseBody, responseType);
+                        return new ApiResponse<>(true, null, data);
+                    } catch (JsonSyntaxException e) {
+                        return new ApiResponse<>(false, "JSON ayrıştırma hatası: Beklenen 'ApiResponse' veya direkt veri formatında değil. Hata: " + e.getMessage() + " - Yanıt: " + responseBody, null);
+                    }
+
+                } else {
+                    ApiResponse<T> apiResponse = null;
+                    try {
+                        apiResponse = gson.fromJson(responseBody, TypeToken.getParameterized(ApiResponse.class, responseType).getType());
+                    } catch (JsonSyntaxException e) {
+                        apiResponse = new ApiResponse<>();
+                        apiResponse.setSuccess(false);
+                        apiResponse.setError("API hatası (HTTP " + statusCode + "): JSON formatı beklenenden farklı veya ayrıştırma hatası. Yanıt: " + responseBody + " - Hata: " + e.getMessage());
+                        apiResponse.setData(null);
+                        return apiResponse;
+                    }
+
+                    if (apiResponse != null && !apiResponse.isSuccess()) {
+                        if (apiResponse.getError() == null || apiResponse.getError().isEmpty()) {
+                            apiResponse.setError("API hatası (HTTP " + statusCode + "): Sunucu hata mesajı sağlamadı. Yanıt: " + responseBody);
+                        }
+                        return apiResponse;
+                    } else {
+                        return new ApiResponse<>(false, "API hatası (HTTP " + statusCode + "): Beklenmeyen yanıt yapısı. Yanıt: " + responseBody, null);
+                    }
+                }
+            } catch (JsonSyntaxException e) {
+                return new ApiResponse<>(false, "JSON ayrıştırma hatası: " + e.getMessage() + " - Yanıt: " + responseBody, null);
+            } catch (Exception e) {
+                return new ApiResponse<>(false, "İstek işlenirken beklenmeyen hata: " + e.getMessage() + " - Yanıt: " + responseBody, null);
+            }
+        });
     }
 
     public UserApiService user() {

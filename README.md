@@ -313,14 +313,6 @@ public void testUserService() {
 - Rate limit offset değerini artırın
 - İstekler arasında daha fazla bekleyin
 
-## 📝 Changelog
-
-### v1.0.1
-- İlk stabil sürüm
-- Tüm Nodesty API endpoint'leri destekleniyor
-- Asenkron operasyonlar
-- Kapsamlı hata yönetimi
-
 ## 🤝 Katkıda Bulunma
 
 1. Projeyi forklayın (`git clone`)
