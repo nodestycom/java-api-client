@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 
 public class UserApiService {
+
     private final ApiFetchFunc apiFetch;
 
     public UserApiService(ApiFetchFunc apiFetch) {

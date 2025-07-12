@@ -15,15 +15,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-
 public class NodestyApiClient implements AutoCloseable {
 
     private static final String API_BASE_URL = "https://nodesty.com/api";
-
     private final AsyncHttpClient asyncHttpClient;
     private final Gson gson;
     private final RestClientOptions options;
-
     private final UserApiService userApiService;
     private final VpsApiService vpsApiService;
     private final FirewallApiService firewallApiService;
@@ -47,6 +44,7 @@ public class NodestyApiClient implements AutoCloseable {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
 
         ApiFetchFunc fetchFunction = new ApiFetchFunc() {
+
             @Override
             public <T> CompletableFuture<ApiResponse<T>> fetch(String path, String method, Object body, Class<T> responseDataType) {
                 return executeFetch(path, method, body, responseDataType);
@@ -68,11 +66,16 @@ public class NodestyApiClient implements AutoCloseable {
     private <T> CompletableFuture<ApiResponse<T>> executeFetch(String path, String method, Object body, Type responseType) {
         String url = API_BASE_URL + path;
         String requestBodyString = null;
+
         if (body != null) {
             requestBodyString = gson.toJson(body);
         }
 
-        BoundRequestBuilder requestBuilder = asyncHttpClient.prepare(method, url).addHeader("Authorization", "PAT " + options.getAccessToken()).addHeader("Content-Type", "application/json");
+        BoundRequestBuilder requestBuilder = asyncHttpClient.
+                prepare(method, url).
+                addHeader("Authorization", "PAT " + options.
+                getAccessToken()).
+                addHeader("Content-Type", "application/json");
 
 
         if (requestBodyString != null) {
@@ -103,7 +106,7 @@ public class NodestyApiClient implements AutoCloseable {
                     }
 
                 } else {
-                    ApiResponse<T> apiResponse = null;
+                    ApiResponse<T> apiResponse;
                     try {
                         apiResponse = gson.fromJson(responseBody, TypeToken.getParameterized(ApiResponse.class, responseType).getType());
                     } catch (JsonSyntaxException e) {

@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 @TestOnly
 public class Test {
     public static void main(String[] args) {
-        String token = "token";
+        String token = "TOKEN";
 
         var options = new RestClientOptions(token)
                 .withTimeout(Duration.ofSeconds(45))
@@ -21,15 +21,15 @@ public class Test {
         try (NodestyApiClient client = new NodestyApiClient(options)) {
 
             CompletableFuture<Void> future = client.user().getCurrentUser()
-                    .thenAccept(response -> {
-                        if (response.isSuccess()) {
-                            CurrentUser user = response.getData();
+                    .thenAccept(userApiResponse -> {
+                        if (userApiResponse.isSuccess()) {
+                            CurrentUser user = userApiResponse.getData();
                             System.out.println("User Info:");
                             System.out.println("ID: " + user.id());
                             System.out.println("Mail: " + user.email());
                             System.out.println("Full Name: " + user.fullName());
                         } else {
-                            System.err.println("Err: " + response.getError());
+                            System.err.println("Err: " + userApiResponse.getError());
                         }
                     })
                     .exceptionally(ex -> {
