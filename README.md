@@ -1,334 +1,148 @@
-# Nodesty Java API Client
-
-[![Java](https://img.shields.io/badge/Java-21+-orange.svg)](https://www.oracle.com/java/)
-[![API](https://img.shields.io/badge/Nodesty-API-green.svg)](https://nodesty.com)
-[![Author](https://img.shields.io/badge/Author-Staticius-blue.svg)](https://github.com/staticius)
-
-nodesty.com'un güçlü API'sine Java uygulamalarınızdan kolayca erişmenizi sağlayan modern, asenkron ve tip güvenli bir istemci kütüphanesi.
-
-## 🚀 Özellikler
-
-- **⚡ Asenkron Operasyonlar**: `CompletableFuture` ile tam asenkron destek
-- **🔒 Tip Güvenliği**: Güçlü tip kontrolü ile Java records ve sınıfları
-- **🔄 Otomatik Serileştirme**: JSON ↔ Java nesne dönüşümü otomatik
-- **⚙️ Yapılandırılabilir**: Timeout, retry, rate limit ayarları
-- **🛡️ Kapsamlı Hata Yönetimi**: Standart `ApiResponse<T>` yapısı
-- **📦 Kaynaklar**: AutoCloseable ile otomatik kaynak yönetimi
-
-## 📋 Desteklenen Servisler
-
-| Servis | Açıklama | Erişim |
-|--------|----------|--------|
-| **User Service** | Kullanıcı profili, hizmetler, faturalar, destek biletleri | `apiClient.user()` |
-| **VPS Service** | VPS yönetimi, yedekler, şifre değişimi, istatistikler | `apiClient.vps()` |
-| **Dedicated Service** | Dedicated sunucu yönetimi, donanım bilgileri | `apiClient.dedicatedServer()` |
-| **Firewall Service** | nShield kuralları, saldırı logları, rDNS yönetimi | `apiClient.firewall()` |
-
-## 🛠️ Kurulum
-
-```xml
-    <repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-
-    <dependency>
-	    <groupId>com.github.nodestycom</groupId>
-	    <artifactId>java-api-client</artifactId>
-	    <version>main-SNAPSHOT</version>
-	</dependency>
-```
-
-```gradle.kts
-
-repositories {
-			mavenCentral()
-			maven { url = uri("https://jitpack.io") }
-		}
-
-dependencies {
-implementation("com.github.nodestycom:java-api-client:main-SNAPSHOT")
-	}
-```
-
-## 🔑 Başlangıç
-
-### API Token Alma
-1. [Nodesty kontrol paneli](https://nodesty.com/dashboard/my-account/access-tokens) adresine giriş yapın.
-
-### Temel Kullanım
-
-```java
-import dev.astatic.nodestyclient.api.*;
-import java.time.Duration;
-
-// Token'ı ortam değişkeninden al (güvenlik için önerilir)
-String accessToken = System.getenv("NODESTY_API_TOKEN");
-
-// İstemci yapılandırması
-RestClientOptions options = new RestClientOptions(accessToken)
-    .withTimeout(Duration.ofSeconds(45))
-    .withRetry(5)
-    .withRateLimitOffset(100);
-
-// İstemciyi başlat
-try (NodestyApiClient apiClient = new NodestyApiClient(options)) {
-    // API çağrılarınızı burada yapın
-}
-```
-
-## 📖 Kullanım Örnekleri
-
-### 👤 Kullanıcı Bilgileri
-
-```java
-// Mevcut kullanıcı bilgilerini al
-apiClient.user().getCurrentUser()
-    .thenAccept(response -> {
-        if (response.isSuccess()) {
-            CurrentUser user = response.getData();
-            System.out.println("Merhaba " + user.fullName());
-            System.out.println("Email: " + user.email());
-        } else {
-            System.err.println("Hata: " + response.getError());
-        }
-    })
-    .exceptionally(ex -> {
-        System.err.println("Beklenmeyen hata: " + ex.getMessage());
-        return null;
-    });
-```
-
-### 🖥️ VPS Yönetimi
-
-```java
-String vpsServiceId = "your-vps-service-id";
-
-// VPS'i yeniden başlat
-apiClient.vps().performAction(vpsServiceId, VpsAction.REBOOT)
-    .thenAccept(response -> {
-        if (response.isSuccess()) {
-            System.out.println("VPS yeniden başlatıldı!");
-        } else {
-            System.err.println("Hata: " + response.getError());
-        }
-    });
-
-// VPS yedeklerini listele
-apiClient.vps().getBackups(vpsServiceId)
-    .thenAccept(response -> {
-        if (response.isSuccess()) {
-            List<VpsBackup> backups = response.getData();
-            backups.forEach(backup -> 
-                System.out.println("Yedek: " + backup.date() + " - " + backup.file())
-            );
-        }
-    });
-```
-
-### 🔧 Dedicated Sunucu
-
-```java
-String dedicatedServiceId = "your-dedicated-service-id";
-
-// Donanım bilgilerini al
-apiClient.dedicatedServer().getHardwareComponents(dedicatedServiceId)
-    .thenAccept(response -> {
-        if (response.isSuccess()) {
-            List<DedicatedServerHardwareComponent> components = response.getData();
-            System.out.println("Donanım Bileşenleri:");
-            components.forEach(comp -> 
-                System.out.println("  - " + comp.component() + ": " + 
-                                 comp.model() + " (" + comp.value() + comp.valueSuffix() + ")")
-            );
-        }
-    });
-```
-
-### 🛡️ Güvenlik Duvarı
-
-```java
-String serviceId = "your-service-id";
-String ipAddress = "your-ip-address";
-
-// Yeni güvenlik duvarı kuralı oluştur
-FirewallCreateRuleData newRule = new FirewallCreateRuleData(25565, 123); // Minecraft Java Edition portu. (Bedrock için varsayılan 19132 dir.)
-apiClient.firewall().createRule(serviceId, ipAddress, newRule)
-    .thenAccept(response -> {
-        if (response.isSuccess()) {
-            System.out.println("Güvenlik duvarı kuralı oluşturuldu!");
-        } else {
-            System.err.println("Hata: " + response.getError());
-        }
-    });
-
-// Saldırı loglarını görüntüle
-apiClient.firewall().getAttackLogs(serviceId, ipAddress)
-    .thenAccept(response -> {
-        if (response.isSuccess()) {
-            List<FirewallAttackLog> logs = response.getData();
-            logs.forEach(log -> 
-                System.out.println("Saldırı: " + log.timestamp() + " - " + log.attackType())
-            );
-        }
-    });
-```
-
-## 🏗️ API Yanıt Yapısı
-
-Tüm API çağrıları `ApiResponse<T>` döner:
-
-```java
-public class ApiResponse<T> {
-    private boolean success;    // İşlem başarılı mı?
-    private String error;       // Hata mesajı (varsa)
-    private T data;            // Dönen veri
-}
-
-// Kullanım
-response.isSuccess()  // boolean
-response.getError()   // String
-response.getData()    // T
-```
-
-## ⚙️ Yapılandırma Seçenekleri
-
-```java
-RestClientOptions options = new RestClientOptions(accessToken)
-    .withTimeout(Duration.ofSeconds(30))     // İstek timeout (varsayılan: 30s)
-    .withRetry(3)                           // Retry sayısı (varsayılan: 3)
-    .withRateLimitOffset(50);               // Rate limit ofseti (varsayılan: 50ms)
-```
-
-## 📚 API Servisleri
-
-### 👤 User Service (`apiClient.user()`)
-
-| Metod | Açıklama | Endpoint |
-|-------|----------|----------|
-| `getCurrentUser()` | Kullanıcı profilini al | `GET /users/@me` |
-| `getServices()` | Tüm hizmetleri listele | `GET /services` |
-| `getTickets()` | Destek biletlerini listele | `GET /tickets` |
-| `getTicket(id)` | Bilet detaylarını al | `GET /tickets/{id}` |
-| `getInvoices()` | Faturaları listele | `GET /users/@me/invoices` |
-| `getInvoice(id)` | Fatura detaylarını al | `GET /users/@me/invoices/{id}` |
-| `getSessions()` | Aktif oturumları listele | `GET /users/@me/sessions` |
-
-### 🖥️ VPS Service (`apiClient.vps()`)
-
-| Metod | Açıklama | Endpoint |
-|-------|----------|----------|
-| `performAction(id, action)` | VPS eylemi gerçekleştir | `POST /services/{id}/vps/action` |
-| `getBackups(id)` | Yedekleri listele | `GET /services/{id}/vps/backups` |
-| `restoreBackup(id, date, file)` | Yedekten geri yükle | `POST /services/{id}/vps/backups/{date}/{file}` |
-| `changePassword(id, data)` | Şifre değiştir | `POST /services/{id}/vps/change-password` |
-| `getGraphs(id)` | İstatistik grafiklerini al | `GET /services/{id}/vps/graphs` |
-| `getDetails(id)` | VPS detaylarını al | `GET /services/{id}/vps/info` |
-| `getOsTemplates(id)` | OS şablonlarını listele | `GET /services/{id}/vps/os-templates` |
-| `reinstall(id, data)` | VPS'i yeniden kur | `POST /services/{id}/vps/reinstall` |
-| `getTasks(id)` | Görevleri listele | `GET /services/{id}/vps/tasks` |
-
-### 🔧 Dedicated Service (`apiClient.dedicatedServer()`)
-
-| Metod | Açıklama | Endpoint |
-|-------|----------|----------|
-| `performAction(id, action)` | Sunucu eylemi gerçekleştir | `POST /services/{id}/dedicated/action` |
-| `getHardwareComponents(id)` | Donanım bilgilerini al | `GET /services/{id}/dedicated/hardware` |
-| `getDetails(id)` | Sunucu detaylarını al | `GET /services/{id}/dedicated/info` |
-| `getOsTemplates(id)` | OS şablonlarını listele | `GET /services/{id}/dedicated/os-templates` |
-| `getReinstallStatus(id)` | Yeniden kurulum durumu | `GET /services/{id}/dedicated/reinstall-status` |
-| `reinstall(id, data)` | Sunucuyu yeniden kur | `POST /services/{id}/dedicated/reinstall` |
-| `getTasks(id)` | Görevleri listele | `GET /services/{id}/dedicated/tasks` |
-
-### 🛡️ Firewall Service (`apiClient.firewall()`)
-
-| Metod | Açıklama | Endpoint |
-|-------|----------|----------|
-| `getAttackLogs(serviceId, ip)` | Saldırı loglarını al | `GET /services/{id}/firewall/{ip}/attack-logs` |
-| `getAttackNotificationSettings(serviceId, ip)` | Bildirim ayarlarını al | `GET /services/{id}/firewall/{ip}/attack-notification` |
-| `updateAttackNotificationSettings(serviceId, ip, data)` | Bildirim ayarlarını güncelle | `PUT /services/{id}/firewall/{ip}/attack-notification` |
-| `deleteReverseDns(serviceId, ip)` | rDNS'i sıfırla | `DELETE /services/{id}/firewall/{ip}/rdns` |
-| `getReverseDns(serviceId, ip)` | rDNS'i al | `GET /services/{id}/firewall/{ip}/rdns` |
-| `upsertReverseDns(serviceId, ip, rdns)` | rDNS'i ayarla | `PUT /services/{id}/firewall/{ip}/rdns` |
-| `deleteRule(serviceId, ip, ruleId)` | Kuralı sil | `DELETE /services/{id}/firewall/{ip}/rules/{ruleId}` |
-| `getRules(serviceId, ip)` | Kuralları listele | `GET /services/{id}/firewall/{ip}/rules` |
-| `createRule(serviceId, ip, data)` | Yeni kural oluştur | `POST /services/{id}/firewall/{ip}/rules` |
-| `getStatistics(serviceId, ip)` | İstatistikleri al | `GET /services/{id}/firewall/{ip}/stats` |
-
-## 🔐 Güvenlik En İyi Uygulamaları
-
-### ✅ Yapılması Gerekenler
-- API token'ı ortam değişkenlerinde saklayın
-- `try-with-resources` kullanarak kaynak yönetimi yapın
-- Her zaman `response.isSuccess()` kontrolü yapın
-- `exceptionally()` ile hata yakalayın
-
-### ❌ Yapılmaması Gerekenler
-- Token'ı kaynak koduna gömmeyİn
-- `join()` metodunu UI thread'lerinde kullanmayın
-- API yanıtlarını kontrol etmeden kullanmayın
-
-## 🚀 Performans İpuçları
-
-- **Asenkron Kullanım**: `join()` yerine `thenAccept()`, `thenApply()` kullanın
-- **Batch İşlemler**: Mümkünse birden fazla işlemi paralel olarak yapın
-- **Timeout Ayarları**: Ağ koşullarınıza göre timeout değerlerini ayarlayın
-- **Rate Limiting**: API limits'lerine dikkat edin
-
-## 🧪 Test Örneği
-
-```java
-@Test
-public void testUserService() {
-    String testToken = System.getenv("TEST_NODESTY_TOKEN");
-    RestClientOptions options = new RestClientOptions(testToken);
-    
-    try (NodestyApiClient client = new NodestyApiClient(options)) {
-        ApiResponse<CurrentUser> response = client.user()
-            .getCurrentUser()
-            .join();
-            
-        assertTrue(response.isSuccess());
-        assertNotNull(response.getData());
-        assertNotNull(response.getData().email());
-    }
-}
-```
-
-## 🐛 Sorun Giderme
-
-### Yaygın Hatalar
-
-**401 Unauthorized**
-- API token'ınızı kontrol edin
-- Token'ın aktif olduğundan emin olun
-
-**Timeout Hataları**
-- Timeout değerini artırın
-- Ağ bağlantınızı kontrol edin
-
-**Rate Limiting**
-- Rate limit offset değerini artırın
-- İstekler arasında daha fazla bekleyin
-
-## 🤝 Katkıda Bulunma
-
-1. Projeyi forklayın (`git clone`)
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add amazing feature'`)
-4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
-
-## 🔗 Bağlantılar
-
-- [Nodesty Website](https://nodesty.com)
-- [API Dökümantasyonu](https://nodesty.com/docs)
-## ⭐ Destek
-
-Bu proje faydalı bulduysanız, lütfen ⭐ vererek destekleyin!
+<div align="center">
+  <img src="https://nodesty.com/_ipx/s_140x32/nodestyGradient.png" alt="Nodesty Logo" width="300"/>
+  <h1>Nodesty Java API İstemcisi</h1>
+  <p><strong>nodesty.com</strong>'un güçlü API'sine Java uygulamalarınızdan kolayca erişmenizi sağlayan modern, asenkron ve tip-güvenli (type-safe) bir istemci kütüphanesi.</p>
+  <p>
+    <a href="https://www.java.com"><img src="https://img.shields.io/badge/Java-21-blue.svg" alt="Java 21"></a>
+    <a href="https://github.com/nodestycom/java-api-client/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
+  </p>
+</div>
 
 ---
 
-**Made with ❤️ for Nodesty Community.
+## 🚀 Temel Özellikler
+
+- ⚡ **Reaktif ve Asenkron**: RxJava3 ile tamamen asenkron, non-blocking operasyonlar.
+- 🔒 **Tip-Güvenliği**: Güçlü tip kontrolü sayesinde daha az çalışma zamanı hatası.
+- 🔄 **Otomatik Serileştirme**: Gson ile JSON ve Java nesneleri arasında otomatik dönüşüm.
+- ⚙️ **Esnek Yapılandırma**: Timeout, yeniden deneme sayısı, rate limit ve loglama seviyesi gibi kritik ayarları kolayca yönetin.
+- 📦 **Modern Kaynak Yönetimi**: AutoCloseable arayüzü ile try-with-resources bloğunda otomatik kaynak temizliği.
+
+---
+
+## 🛠️ Kurulum
+
+### Gradle (Kotlin DSL)
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+}
+dependencies {
+    implementation 'com.github.nodestycom:java-api-client:main-SNAPSHOT'
+}
+```
+
+---
+
+## 🔑 Hızlı Başlangıç
+
+### 1. API İstemcisini Yapılandırma
+
+```java
+import dev.astatic.nodestyclient.client.ClientOptions;
+import dev.astatic.nodestyclient.client.NodestyApiClient;
+import java.time.Duration;
+
+String accessToken = System.getenv("NODESTY_API_TOKEN");
+
+ClientOptions options = new ClientOptions(accessToken)
+    .withTimeout(Duration.ofSeconds(45))
+    .withRetry(5)
+    .withLogLevel(ClientOptions.LogLevel.BODY);
+
+try (NodestyApiClient client = new NodestyApiClient(options)) {
+    client.getUser().getCurrentUser()
+        .subscribe(
+            user -> System.out.println("Merhaba, " + user.getUsername()),
+            error -> System.err.println("Bir hata oluştu: " + error.getMessage())
+        );
+
+    Thread.sleep(5000);
+} catch (InterruptedException e) {
+    e.printStackTrace();
+}
+```
+
+---
+
+## 📖 API Referansı
+
+### 👤 User Service (`client.getUser()`)
+
+| Metot | Endpoint | Açıklama |
+|-------|----------|----------|
+| GET | `/users/@me` | Mevcut kullanıcı bilgilerini getirir |
+| GET | `/services` | Kullanıcının tüm hizmetlerini listeler |
+| GET | `/tickets` | Tüm destek biletlerini listeler |
+| GET | `/tickets/{id}` | Belirli bileti getirir |
+| GET | `/users/@me/invoices` | Faturaları listeler |
+| GET | `/users/@me/invoices/{id}` | Fatura detaylarını getirir |
+| GET | `/users/@me/sessions` | Aktif oturumları getirir |
+
+### ☁️ VPS Service (`client.getVps()`)
+
+| Metot | Endpoint | Açıklama |
+|-------|----------|----------|
+| GET | `/services/{id}/vps/info` | VPS detaylarını getirir |
+| POST | `/services/{id}/vps/action` | VPS eylemi gönderir (REBOOT, SHUTDOWN) |
+| GET | `/services/{id}/vps/graphs` | VPS kullanım grafiklerini alır |
+| GET | `/services/{id}/vps/tasks` | VPS görevlerini listeler |
+| POST | `/services/{id}/vps/password` | Root şifresini değiştirir |
+| GET | `/services/{id}/vps/os-templates` | İşletim sistemi şablonlarını listeler |
+| POST | `/services/{id}/vps/reinstall` | VPS'i yeniden kurar |
+| POST | `/services/{id}/vps/backups/{date}/{file}` | Belirli yedeği geri yükler |
+
+### 🔥 Firewall Service (`client.getFirewall()`)
+
+| Metot | Endpoint | Açıklama |
+|-------|----------|----------|
+| GET | `/services/{id}/firewall/{ip}/rules` | Kuralları listeler |
+| POST | `/services/{id}/firewall/{ip}/rules` | Yeni kural oluşturur |
+| DELETE | `/services/{id}/firewall/{ip}/rules/port` | Porta göre siler |
+| DELETE | `/services/{id}/firewall/{ip}/rules/app` | Uygulamaya göre siler |
+| GET | `/services/{id}/firewall/{ip}/attack-logs` | Saldırı loglarını getirir |
+| GET | `/services/{id}/firewall/{ip}/stats` | İstatistikleri getirir |
+| GET | `/services/{id}/firewall/{ip}/reverse-dns` | Reverse DNS kayıtlarını listeler |
+| PUT | `/services/{id}/firewall/{ip}/reverse-dns` | Reverse DNS günceller |
+| GET | `/services/{id}/firewall/{ip}/attack-notification` | Bildirim ayarlarını getirir |
+| PUT | `/services/{id}/firewall/{ip}/attack-notification` | Bildirim ayarlarını günceller |
+
+### 🖥️ Dedicated Service (`client.getDedicated()`)
+
+| Metot | Endpoint | Açıklama |
+|-------|----------|----------|
+| GET | `/services/{id}/dedicated/info` | Sunucu bilgilerini getirir |
+| POST | `/services/{id}/dedicated/action` | Eylem gönderir |
+| GET | `/services/{id}/dedicated/hardware` | Donanım bilgilerini getirir |
+| GET | `/services/{id}/dedicated/tasks` | Görevleri listeler |
+| GET | `/services/{id}/dedicated/os-templates` | OS şablonlarını getirir |
+| POST | `/services/{id}/dedicated/reinstall` | Yeniden kurulum başlatır |
+| GET | `/services/{id}/dedicated/reinstall-status` | Yeniden kurulum durumunu getirir |
+
+---
+
+## 🔐 Güvenlik ve En İyi Pratikler
+
+- Token'ınızı kaynak kodda tutmayın, ortam değişkeni kullanın.
+- `try-with-resources` ile istemciyi yönetin.
+- Hata yönetimini her `.subscribe()` çağrısında sağlayın.
+- `blockingGet()` gibi bloklayıcı metotlardan kaçının.
+
+---
+
+## 🤝 Katkıda Bulunma
+
+1. Bu repoyu fork'layın
+2. Yeni bir dal oluşturun: `git checkout -b feature/yeni-ozellik`
+3. Değişikliklerinizi yapın ve commit'leyin
+4. Dalınızı push'layın: `git push origin feature/yeni-ozellik`
+5. Pull Request oluşturun
+
+---
+
+<div align="center">
+  <p>⭐ Bu proje işinize yaradıysa bir yıldız bırakmayı unutmayın! ⭐</p>
+  <p><strong>Nodesty Topluluğu için ❤️ ile geliştirildi.</strong></p>
+</div>
