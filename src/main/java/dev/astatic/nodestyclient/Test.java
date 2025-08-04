@@ -3,12 +3,14 @@ package dev.astatic.nodestyclient;
 import dev.astatic.nodestyclient.client.NodestyApiClient;
 import dev.astatic.nodestyclient.client.ClientOptions;
 import io.reactivex.rxjava3.disposables.Disposable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
+    @TestOnly
     public static void main(String[] args) {
 
         String token = "token";
